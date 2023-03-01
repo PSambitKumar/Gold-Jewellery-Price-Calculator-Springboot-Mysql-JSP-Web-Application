@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.nio.file.Files;
@@ -21,6 +22,7 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.Date;
 import java.util.List;
+import java.util.Objects;
 
 /**
  * @Project : GoldJewelleryPriceCalculator
@@ -51,14 +53,18 @@ public class GoldRateController {
         System.out.println("Inside Gold Rate File Upload");
 
         if (!excelFileUpload.isEmpty()) {
-            String folderPath = "D:\\";
-            byte[] bytes = excelFileUpload.getBytes();
-            Path path = Paths.get(folderPath.trim() + "/" + excelFileUpload.getOriginalFilename().trim());
-            Files.write(path, bytes);
-            System.out.println("Full File Path: " + path);
+//            String folderPath = "D:\\";
+//            byte[] bytes = excelFileUpload.getBytes();
+//            Path path = Paths.get(folderPath.trim() + "/" + excelFileUpload.getOriginalFilename().trim());
+//            Files.write(path, bytes);
+//            System.out.println("Full File Path: " + path);
+//
+//            FileInputStream fileInputStream = new FileInputStream(path.toString());
+//            XSSFWorkbook workbook = new XSSFWorkbook(fileInputStream);
 
-            FileInputStream fileInputStream = new FileInputStream(path.toString());
-            XSSFWorkbook workbook = new XSSFWorkbook(fileInputStream);
+//            Or
+            XSSFWorkbook workbook = new XSSFWorkbook(excelFileUpload.getInputStream());
+            
             XSSFSheet sheet = workbook.getSheetAt(0);
             System.out.println("Sheet Name : "+sheet.getSheetName());
             int rowCount = sheet.getLastRowNum();
@@ -99,8 +105,6 @@ public class GoldRateController {
                 System.out.println("=====================================");
             }
         }
-        List<PriceDtl> priceDtlList = priceDtlRepository.findAll();
-        model.addAttribute("priceDtlList", priceDtlList);
-        return "gold";
+        return "redirect:/gold";
     }
 }
